@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CuentaYines</string>
+    <string name="deduct_yin_string">Quitar 1 Yin</string>
+    <string name="reset_yines_string">Volver a empezar</string>
+
+</resources>
