@@ -2,11 +2,31 @@
 <resources>
 
     <string name="app_name">CuentaYines</string>
-    <string name="deduct_yin_string">Quitar 1 Yin</string>
-    <string name="reset_yines_string">Volver a empezar</string>
-    <string name="set_yin_price_string">Establecer Precio del Yin</string>
-    <string name="yin_price_string">Precio del Yin</string>
-    <string name="ok_string">Aceptar</string>
+    
+    <string name="reset_counters">Resetear todos los contadores</string>
+    <string name="delete_all_categories">Borrar todas los productos</string>
+    
+    <string name="category_info_1p">%1$.2f %2$s/ud | Subtotal: %3$.2f %2$s</string>
+    <string name="category_info">%1$.2f %2$s/ud | %3$d personas | Subtotal: %4$.2f %2$s</string>
+    <string name="total">Total: %1$.2f %2$s</string>
+    
+    <string name="ok">Aceptar</string>
     <string name="cancel_string">Cancelar</string>
-
+    
+    <string name="new_category">Nuevo producto</string>
+  	<string name="add_new_categories">Para empezar, añada un nuevo producto mediante el botón habilitado al efecto</string>
+    
+   	<string name="options">Opciones</string>
+   	<string name="decrease_one">Quitar uno</string>
+   	<string name="set_to_zero">Resetear contador a cero</string>
+   	<string name="edit_category">Editar Producto</string>
+   	<string name="remove_category">Borrar Producto</string>
+   	
+   	<string name="category_name">Nombre del producto</string>
+   	<string name="category_price">Precio del producto</string>
+   	<string name="category_people">Personas</string>
+   	<string name="error_empty_cat_name">Error: El nombre del producto no puede estar vacío</string>
+   	<string name="error_empty_price_name">Error: El precio del producto no puede estar vacío</string>
+   	<string name="error_zero_people">Error: No puedes crear un producto a compartir con cero personas</string>
+   	<string name="error_unexpected_input">Error: Alguno de los campos no es correcto</string>
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+
+    <!-- ListRow Left sied Thumbnail image -->
+
+    <LinearLayout
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip"
+        android:gravity="center"
+        android:padding="3dip" >
+
+        <TextView
+            android:id="@+id/categoryCountView"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:textSize="40sp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <!-- Title Of Song -->
+
+    <TextView
+        android:id="@+id/categoryNameView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/count"
+        android:layout_toRightOf="@+id/count"
+        android:textStyle="bold" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <!-- Artist Name -->
+
+    <TextView
+        android:id="@+id/categoryAdditionalInfoView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/categoryNameView"
+        android:layout_toRightOf="@+id/count"
+        android:layout_marginTop="1dip" />
+
+</RelativeLayout>
