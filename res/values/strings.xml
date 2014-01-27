@@ -4,5 +4,10 @@
     <string name="app_name">CuentaYines</string>
     <string name="deduct_yin_string">Deduct Yin</string>
     <string name="reset_yines_string">Reset Yines</string>
+    <string name="set_yin_price_string">Set Yin Price</string>
+    <string name="total_string">Total: %1$.2f %2$s</string>
+    <string name="yin_price_string">Yin Price</string>
+    <string name="ok_string">OK</string>
+    <string name="cancel_string">Cancel</string>
 
 </resources>

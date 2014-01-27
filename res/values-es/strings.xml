@@ -4,5 +4,9 @@
     <string name="app_name">CuentaYines</string>
     <string name="deduct_yin_string">Quitar 1 Yin</string>
     <string name="reset_yines_string">Volver a empezar</string>
+    <string name="set_yin_price_string">Establecer Precio del Yin</string>
+    <string name="yin_price_string">Precio del Yin</string>
+    <string name="ok_string">Aceptar</string>
+    <string name="cancel_string">Cancelar</string>
 
 </resources>

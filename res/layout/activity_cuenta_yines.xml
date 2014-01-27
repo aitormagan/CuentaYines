@@ -9,7 +9,7 @@
     tools:context=".CuentaYines" >
 
     <TextView
-        android:id="@+id/yinesCount"
+        android:id="@+id/yinesCountView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentBottom="true"
@@ -19,5 +19,14 @@
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="200sp" />
+
+    <TextView
+        android:id="@+id/priceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/yinesCountView"
+        android:layout_alignLeft="@+id/yinesCountView"
+        android:layout_alignParentRight="true" />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/deduct_yin_menu" android:title="@string/deduct_yin_string"></item><item android:id="@+id/reset_yines_menu" android:title="@string/reset_yines_string"></item>
+    <item android:id="@+id/set_yin_price_menu" android:title="@string/set_yin_price_string"></item>
     
 
 </menu>
