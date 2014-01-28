@@ -2,11 +2,13 @@ package es.aitormagan.android.cuentayines;
 
 import java.util.ArrayList;
 
-import es.aitormagan.cuentayines.R;
+import es.aitormagan.cuentayines.android.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,29 +23,33 @@ import android.widget.Toast;
 
 public class CuentaYines extends Activity {
 
-	//Preferences
-	//private static final String PREFS_NAME = "CuentaYinesPrefs";
+	//Storage
+	private ProductStorage storage;
 
 	//Internal Elements
-	private ArrayList<Category> categories = new ArrayList<Category>();
-	private CategoryAdapter categoryAdapter;
+	private ArrayList<Product> products = new ArrayList<Product>();
+	private ProductAdapter productAdapter;
 
 	//UI elements
-	private ListView categoriesView;
+	private ListView productsView;
 	private TextView totalView;
 	private TextView addNewCatsView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cuenta_yines);
 
-		// Restore preferences
-		//SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		//Get products
+		storage = new ProductStorage(this);
+		products = storage.getProducts();
 
 		initializeView();	//Initialize view
+	}
 
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		initializeView();
 	}
 
 	@Override
@@ -57,112 +63,172 @@ public class CuentaYines extends Activity {
 
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.reset_counts_menu:
-			for (Category category: categories) {
-				category.setCountToZero();
+		case R.id.reset_counters:
+			for (Product product: products) {
+				product.setCountToZero();
 			}
 			updateView();
 			break;
-		case R.id.delete_all_categories_menu:
-			categories.clear();
+		case R.id.delete_all_products:
+			products.clear();
 			updateView();
 			break;
-		case R.id.new_category_menu:
-			editOrCreateCategory(null);
+		case R.id.new_product:
+			editOrCreateProduct(null);
 			break;
+		case R.id.about:
+			Intent intent = new Intent(this, About.class);
+			startActivity(intent);
 		}
 
 		return true;
 	}
 
-	/*@Override
+	@Override
 	public void onBackPressed() {
-
-		//Safe current yines count
-		safeYines();
-
-		//Execute default action
-		super.onBackPressed();
+		storage.saveProducts(products);	//Save current products
+		super.onBackPressed();			//Default back action
 	}
 
 	@Override
 	protected void onStop() {
+		storage.saveProducts(products);	//Save current products
+		super.onStop();					//Default stop action
+	}
 
-		//Safe current yines count
-		safeYines();
+	private void initializeView() {
 
-		//Execute default action
-		super.onStop();
+		//Get Views
+		productsView = (ListView) findViewById(R.id.productsView);
+		totalView = (TextView) findViewById(R.id.totalView);
+		addNewCatsView = (TextView) findViewById(R.id.addNewCategoriesView);
 
-	}*/
+		//Associate adapter to the list
+		productAdapter = new ProductAdapter(this, this.products);
+		productsView.setAdapter(productAdapter);
 
-	private void editOrCreateCategory(final Category category) {
+		//Add listener to the list
+		productsView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> a, View v, int position, long id) { 
+				final Product product = (Product) productsView.getItemAtPosition(position);    
+				product.incrementCount();
+				updateView();
+			}
+		});
+
+		productsView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
+				final Product product = (Product) productsView.getItemAtPosition(position);    
+				AlertDialog.Builder builder = new AlertDialog.Builder(CuentaYines.this);
+				builder.setTitle(R.string.options);
+
+				final CharSequence[] items = { 
+						getString(R.string.decrease_one), 	//0
+						getString(R.string.set_to_zero), 	//1
+						getString(R.string.edit_product), 	//2
+						getString(R.string.remove_product)	//3
+				};
+
+				builder.setTitle(R.string.options)
+				.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which) {
+						case 0:	//Decrease one
+							product.decreaseCount();
+							break;
+						case 1:	//Set count to zero
+							product.setCountToZero();
+							break;
+						case 2:	//Edit product
+							editOrCreateProduct(product);
+							break;
+						case 3:	//Remove product
+							products.remove(product);
+							break;
+						}
+						updateView();
+
+					}
+				});
+
+				builder.show();
+				return true;
+			}
+		});
+
+		updateView();
+	}
+
+	private void editOrCreateProduct(final Product product) {
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		// Get the layout inflater
 		LayoutInflater inflater = this.getLayoutInflater();
-		final View dialogView = inflater.inflate(R.layout.new_category, null);
-		final EditText categoryNameView = (EditText) dialogView.findViewById(R.id.new_category_name);
-		final EditText categoryPriceView = (EditText) dialogView.findViewById(R.id.new_category_price);
-		final EditText categoryPeopleView = (EditText) dialogView.findViewById(R.id.new_category_people);
+		final View dialogView = inflater.inflate(R.layout.new_product, null);
+		final EditText productNameView = (EditText) dialogView.findViewById(R.id.new_product_name);
+		final EditText productPriceView = (EditText) dialogView.findViewById(R.id.new_product_price);
+		final EditText productPeopleView = (EditText) dialogView.findViewById(R.id.new_product_people);
 
-		if (category != null) {
-			categoryNameView.setText(category.getName());
-			categoryPriceView.setText(Float.valueOf(category.getPrice()).toString());
-			categoryPeopleView.setText(Integer.valueOf(category.getPeople()).toString());
+		if (product != null) {
+			productNameView.setText(product.getName());
+			productPriceView.setText(Float.valueOf(product.getPrice()).toString());
+			productPeopleView.setText(Integer.valueOf(product.getPeople()).toString());
 		}
 
-		// Inflate and set the layout for the dialog
-		// Pass null as the parent view because its going in the dialog layout
-		builder.setTitle(R.string.new_category)
+		int titleID = (product == null) ? R.string.new_product : R.string.edit_product;
+
+		//Create dialog
+		builder.setTitle(titleID)
 		.setView(dialogView)
-		// Add action buttons
 		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 
-				String categoryName = categoryNameView.getText().toString();
-				String categoryPriceStr = categoryPriceView.getText().toString();
-				String categoryPeopleStr = categoryPeopleView.getText().toString();
+				String productName = productNameView.getText().toString().trim();
+				String productPriceStr = productPriceView.getText().toString();
+				String productPeopleStr = productPeopleView.getText().toString();
 
-				if (categoryName.equals("") ) {
+				if (productName.equals("") ) {
 					Toast.makeText(CuentaYines.this, R.string.error_empty_cat_name, Toast.LENGTH_LONG).show();
-				} else if (categoryPriceStr.equals("")) {
+				} else if (productPriceStr.equals("")) {
 					Toast.makeText(CuentaYines.this, R.string.error_empty_price_name, Toast.LENGTH_LONG).show();
 				} else {
-					
-					if (categoryPeopleStr.equals("")) {
-						categoryPeopleStr = "1";
+
+					if (productPeopleStr.equals("")) {
+						productPeopleStr = "1";
 					}
 
 					try {
 
-						int categoryPeople = Integer.valueOf(categoryPeopleStr);
-						float categoryPrice = Float.valueOf(categoryPriceStr);
+						int productPeople = Integer.valueOf(productPeopleStr);
+						float productPrice = Float.valueOf(productPriceStr);
 
-						if (categoryPeople <= 0) {
+						if (productPeople <= 0) {
 							Toast.makeText(CuentaYines.this, R.string.error_zero_people, Toast.LENGTH_LONG).show();
 						} else {
-							if (category != null) {
-								category.setName(categoryName);
-								category.setPrice(categoryPrice);
-								category.setPeople(categoryPeople);
+							Product newProd = new Product(productName, productPrice, productPeople);
+							
+							if (product == null && !products.contains(newProd)) {
+								products.add(newProd);
+							} else if (product != null && (!products.contains(newProd) || newProd.equals(product))) {
+								product.setName(productName);
+								product.setPrice(productPrice);
+								product.setPeople(productPeople);
 							} else {
-								categories.add(new Category(categoryName, categoryPrice, categoryPeople));
+								Toast.makeText(CuentaYines.this, R.string.error_duplicate_product, Toast.LENGTH_LONG).show();
 							}
-
+							
 							//View need to be updated
 							updateView();
 						}
-
 					} catch (Exception e) {
 						Toast.makeText(CuentaYines.this, R.string.error_unexpected_input, Toast.LENGTH_LONG).show();
 					}
-
-
 				}
 			}
 		})
-		.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
+		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
@@ -171,121 +237,25 @@ public class CuentaYines extends Activity {
 		builder.show();
 	}
 
-	private void showOrHideAddNewCategoriesView() {
-		if (categories.size() == 0) {
-			addNewCatsView.setVisibility(View.VISIBLE);
-			totalView.setVisibility(View.INVISIBLE);
-			categoriesView.setVisibility(View.INVISIBLE);
-		} else {
-			addNewCatsView.setVisibility(View.INVISIBLE);
-			totalView.setVisibility(View.VISIBLE);
-			categoriesView.setVisibility(View.VISIBLE);
-		}
-	}
-
-	private void initializeView() {
-
-		//Get Views
-		categoriesView = (ListView) findViewById(R.id.categoriesView);
-		totalView = (TextView) findViewById(R.id.totalView);
-		addNewCatsView = (TextView) findViewById(R.id.addNewCategoriesView);
-
-
-
-
-		//FIXME: Load from original source. Remove
-		categories.add(new Category("Yin", 1.2f));
-		categories.add(new Category("Tercio", 1.5f));
-		categories.add(new Category("Cocacola", 1.5f));
-		categories.add(new Category("Cubata", 4f));
-		categories.add(new Category("Bravas", 4f, 4));
-
-		//Asociar el adapter de la lista
-		categoryAdapter = new CategoryAdapter(this, this.categories);
-		categoriesView.setAdapter(categoryAdapter);
-
-		//Añadir listener para la lista
-		categoriesView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) { 
-				final Category category = (Category) categoriesView.getItemAtPosition(position);    
-				category.incrementCount();
-				updateView();
-			}
-		});
-
-		categoriesView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
-				final Category category = (Category) categoriesView.getItemAtPosition(position);    
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(CuentaYines.this);
-				builder.setTitle(R.string.options);
-
-				final CharSequence[] items = { getString(R.string.decrease_one), 
-						getString(R.string.set_to_zero), getString(R.string.remove_category),
-						getString(R.string.edit_category) }; 
-
-				builder.setTitle(R.string.options)
-				.setItems(items, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						switch(which) {
-						case 0:
-							category.decreaseCount();
-							break;
-						case 1:
-							category.setCountToZero();
-							break;
-						case 2:
-							categories.remove(category);
-							break;
-						case 3:
-							editOrCreateCategory(category);
-							break;
-						}
-
-						updateView();
-
-					}
-				});
-
-				builder.show();
-
-				return true;
-			}
-		});
-		
-		//Show correct views
-		showOrHideAddNewCategoriesView();
-		updateView();
-	}
-
 	private void updateView() {
 
 		float total = 0;
-		for (Category category: categories) {
-			total += category.getTotalPrice();
+		for (Product product: products) {
+			total += product.getTotalPrice();
 		}
 
-		showOrHideAddNewCategoriesView();
+		if (products.size() == 0) {
+			addNewCatsView.setVisibility(View.VISIBLE);
+			totalView.setVisibility(View.INVISIBLE);
+			productsView.setVisibility(View.INVISIBLE);
+		} else {
+			addNewCatsView.setVisibility(View.INVISIBLE);
+			totalView.setVisibility(View.VISIBLE);
+			productsView.setVisibility(View.VISIBLE);
+		}
 
-		categoryAdapter.notifyDataSetChanged();
-		totalView.setText(String.format(getString(R.string.total), total, "€"));
+		productAdapter.notifyDataSetChanged();
+		totalView.setText(String.format(getString(R.string.total_format), total, "€"));
 
 	}
-
-
-	private void save() {
-		/*//Save preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(YINES_COUNT_PREF, yines);
-		editor.putFloat(YINES_PRICE_PREF, yinPrice);
-
-		// Commit the edits!
-		editor.commit();*/
-	}
-
 }

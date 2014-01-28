@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dip" >
-
-    <!-- ListRow Left sied Thumbnail image -->
+    
+    <!-- Counter -->
 
     <LinearLayout
         android:id="@+id/count"
@@ -17,7 +17,7 @@
         android:padding="3dip" >
 
         <TextView
-            android:id="@+id/categoryCountView"
+            android:id="@+id/productCountView"
             android:layout_width="50dip"
             android:layout_height="50dip"
             android:gravity="center"
@@ -25,25 +25,45 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
 
-    <!-- Title Of Song -->
-
+   	<!-- Product Name -->
+    
     <TextView
-        android:id="@+id/categoryNameView"
-        android:layout_width="wrap_content"
+        android:id="@+id/productNameView"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/count"
         android:layout_toRightOf="@+id/count"
+     	android:layout_toLeftOf="@+id/productTotalPriceView"
         android:textStyle="bold" 
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <!-- Artist Name -->
-
+   	<!-- Product Price per unit -->
+    
     <TextView
-        android:id="@+id/categoryAdditionalInfoView"
+        android:id="@+id/productPricePerUnitView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/categoryNameView"
-        android:layout_toRightOf="@+id/count"
-        android:layout_marginTop="1dip" />
+        android:layout_below="@id/productNameView"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/count" />
+
+   	<!-- Product People -->
+    
+    <TextView
+        android:id="@+id/productPeopleView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/productPricePerUnitView"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/count" />
+
+    <!-- Product Total Price -->
+    
+    <TextView 
+        android:id="@+id/productTotalPriceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"  />
 
 </RelativeLayout>

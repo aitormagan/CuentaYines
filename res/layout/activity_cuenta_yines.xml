@@ -19,7 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
-        android:id="@+id/categoriesView"
+        android:id="@+id/productsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/totalView"
@@ -34,9 +34,9 @@
         android:layout_alignBottom="@+id/totalView"
         android:layout_alignLeft="@+id/totalView"
         android:layout_alignRight="@+id/totalView"
-        android:layout_alignTop="@+id/categoriesView"
+        android:layout_alignTop="@+id/productsView"
         android:gravity="center"
-        android:text="@string/add_new_categories"
+        android:text="@string/add_new_products"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -4,30 +4,37 @@
     <string name="app_name">CuentaYines</string>
     
     <string name="reset_counters">Reset all counters</string>
-    <string name="delete_all_categories">Delete all categories</string>
+    <string name="delete_all_products">Delete all products</string>
     
-    <string name="category_info_1p">%1$.2f %2$s/unit | Subtotal: %3$.2f %2$s</string>
-    <string name="category_info">%1$.2f %2$s/unit | %3$d people | Subtotal: %4$.2f %2$s</string>
-    <string name="total">Total: %1$.2f %2$s</string>
+    <string name="product_price_per_unit_format">%1$.2f %2$s/unit</string>
+    <string name="product_people_format">%d people</string>
+    <string name="product_total_price_format">%1$.2f %2$s</string>
+    <string name="total_format">Total: %1$.2f %2$s</string>
     
     <string name="ok">OK</string>
-    <string name="cancel_string">Cancel</string>
+    <string name="cancel">Cancel</string>
     
-    <string name="new_category">New Category</string>
-  	<string name="add_new_categories">To start, add a new category</string>
+    <string name="new_product">New product</string>
+   	<string name="edit_product">Edit product</string>
+  	<string name="add_new_products">To start, add a new product with the button available above</string>
     
    	<string name="options">Options</string>
    	<string name="decrease_one">Decrease one</string>
-   	<string name="set_to_zero">Set to Zero</string>
-   	<string name="edit_category">Edit Category</string>
-   	<string name="remove_category">Remove Category</string>
+   	<string name="set_to_zero">Set to zero</string>
+   	<string name="remove_product">Remove product</string>
    	
-   	<string name="category_name">Category name</string>
-   	<string name="category_price">Category price</string>
-   	<string name="category_people">Category people</string>
-   	<string name="error_empty_cat_name">You can\'t create a category without its name</string>
-   	<string name="error_empty_price_name">You can\'t create a category without its price</string>
-   	<string name="error_zero_people">You can\'t create a category with zero people</string>
-   	<string name="error_unexpected_input">Input is not correct</string>
+   	<string name="product_name">Product name</string>
+   	<string name="product_price">Product price</string>
+   	<string name="product_people">Product people</string>
+   	<string name="error_empty_cat_name">Error: You can\'t create a category without its name</string>
+   	<string name="error_empty_price_name">Error: You can\'t create a category without its price</string>
+   	<string name="error_zero_people">Error: You can\'t create a category with zero people</string>
+   	<string name="error_unexpected_input">Error: Some input values are incorrect</string>
+   	<string name="error_duplicate_product">Error: There is already an element in the list with the same characteristics</string>
+   	
+  	<string name="error_write_file">Error: An error arises when your products were being saved so you\'ll get an empty list when you reopen the application :(</string>
+
+  	<string name="about_activity_title">About</string>
+  	<string name="about">2014\n@AitorMagan</string>
 
 </resources>

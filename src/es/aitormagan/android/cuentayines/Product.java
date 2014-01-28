@@ -1,20 +1,24 @@
 package es.aitormagan.android.cuentayines;
 
-public class Category {
+import java.io.Serializable;
 
+public class Product implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	private transient static final int MAX_COUNT = 99;
 	private String name;
 	private float price;
 	private int people;
 	private int count;
 
-	public Category(String name, float price, int people) {
+	public Product(String name, float price, int people) {
 		this.name = name;
 		this.price = price;
 		this.people = people;
 		this.count = 0;
 	}
 
-	public Category(String name, float price) {
+	public Product(String name, float price) {
 		this(name, price, 1);
 	}
 
@@ -47,7 +51,8 @@ public class Category {
 	}
 	
 	public void incrementCount() {
-		this.count++;
+		if (count < MAX_COUNT)
+			this.count++;
 	}
 	
 	public void decreaseCount() {
@@ -73,11 +78,11 @@ public class Category {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Category){
-			Category other = (Category) obj;
+		if (obj instanceof Product){
+			Product other = (Product) obj;
 			return other.name.equals(this.name) && 
 					other.price == this.price && 
-					other.people == other.people;
+					other.people == this.people;
 		}
 
 		return false;

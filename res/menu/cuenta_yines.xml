@@ -1,12 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
-    <item android:id="@+id/reset_counts_menu" android:title="@string/reset_counters"></item>
-    <item android:id="@+id/delete_all_categories_menu" android:title="@string/delete_all_categories"></item>
+    <item android:id="@+id/reset_counters" android:title="@string/reset_counters"></item>
+    <item android:id="@+id/delete_all_products" android:title="@string/delete_all_products"></item>
     
-    <item android:id="@+id/new_category_menu"
+    <item android:id="@+id/new_product"
       android:icon="@drawable/ic_action_new_label"
-      android:title="@string/new_category"
+      android:title="@string/new_product"
       android:showAsAction="ifRoom" />
+    <item android:id="@+id/about" android:title="@string/about_activity_title"></item>
     
 
 </menu>
