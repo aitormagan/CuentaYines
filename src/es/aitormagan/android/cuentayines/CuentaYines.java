@@ -40,7 +40,7 @@ public class CuentaYines extends SherlockActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cuenta_yines);
-		
+
 		//Get products
 		storage = new ProductStorage(this);
 		products = storage.getProducts();
@@ -209,7 +209,7 @@ public class CuentaYines extends SherlockActivity {
 							Toast.makeText(CuentaYines.this, R.string.error_zero_people, Toast.LENGTH_LONG).show();
 						} else {
 							Product newProd = new Product(productName, productPrice, productPeople);
-							
+
 							if (product == null && !products.contains(newProd)) {
 								products.add(newProd);
 							} else if (product != null && (!products.contains(newProd) || newProd.equals(product))) {
@@ -219,7 +219,7 @@ public class CuentaYines extends SherlockActivity {
 							} else {
 								Toast.makeText(CuentaYines.this, R.string.error_duplicate_product, Toast.LENGTH_LONG).show();
 							}
-							
+
 							//View need to be updated
 							updateView();
 						}

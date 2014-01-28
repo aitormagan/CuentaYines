@@ -69,7 +69,7 @@ public class ProductAdapter extends BaseAdapter{
 				product.getPeople()));
 		mHolder.totalPriceView.setText(String.format(mContext.getString(R.string.product_total_price_format), 
 				product.getTotalPrice(), "€"));
-		
+
 		if (product.getPeople() == 1) {
 			mHolder.peopleView.setVisibility(View.INVISIBLE);
 		} else {

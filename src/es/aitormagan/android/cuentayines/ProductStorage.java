@@ -18,11 +18,11 @@ public class ProductStorage {
 	public ProductStorage(Context context) {
 		this.context = context;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<Product> getProducts() {
 		ArrayList<Product> products = new ArrayList<Product>();
-		
+
 		try {
 			FileInputStream fis = context.openFileInput(PRODUCTS_FILE);
 			ObjectInputStream ois = new ObjectInputStream(fis);

@@ -19,13 +19,13 @@ public class About extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
-		
+
 		//Enable back
 		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		TextView aboutView = (TextView) findViewById(R.id.aboutView);
 		aboutView.setOnClickListener(new OnClickListener() {
@@ -49,15 +49,15 @@ public class About extends SherlockActivity {
 		getSupportMenuInflater().inflate(R.menu.about, menu);
 		return true;
 	}
-	
+
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-	    if (item.getItemId() == android.R.id.home) {
-	    	finish();
-	        return true;
-	    } else {
-	        return super.onOptionsItemSelected(item);
-	    }
-    }
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+			finish();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 }

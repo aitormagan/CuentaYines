@@ -49,21 +49,21 @@ public class Product implements Serializable {
 	public int getCount() {
 		return count;
 	}
-	
+
 	public void incrementCount() {
 		if (count < MAX_COUNT)
 			this.count++;
 	}
-	
+
 	public void decreaseCount() {
 		if (this.count > 0)
 			this.count--;
 	}
-	
+
 	public void setCountToZero() {
 		this.count = 0;
 	}
-	
+
 	public float getTotalPrice() {
 		return count * price / people;
 	}
