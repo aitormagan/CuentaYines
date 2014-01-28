@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="es.aitormagan.cuentayines.android"
     android:versionCode="2"
-    android:versionName="1.1" >
+    android:versionName="1.1" 
+    android:installLocation="preferExternal">
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -25,7 +26,8 @@
         <activity
             android:name="es.aitormagan.android.cuentayines.About"
             android:label="@string/about_activity_title"
-            android:parentActivityName="es.aitormagan.android.cuentayines.CuentaYines" >
+            android:parentActivityName="es.aitormagan.android.cuentayines.CuentaYines" 
+            android:noHistory="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.aitormagan.android.cuentayines.CuentaYines" />

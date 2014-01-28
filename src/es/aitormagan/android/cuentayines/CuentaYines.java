@@ -2,16 +2,17 @@ package es.aitormagan.android.cuentayines;
 
 import java.util.ArrayList;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import es.aitormagan.cuentayines.android.R;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,7 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CuentaYines extends Activity {
+public class CuentaYines extends SherlockActivity {
 
 	//Storage
 	private ProductStorage storage;
@@ -39,7 +40,7 @@ public class CuentaYines extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cuenta_yines);
-
+		
 		//Get products
 		storage = new ProductStorage(this);
 		products = storage.getProducts();
@@ -54,7 +55,7 @@ public class CuentaYines extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.cuenta_yines, menu);
+		getSupportMenuInflater().inflate(R.menu.cuenta_yines, menu);
 		return true;
 	}
 
