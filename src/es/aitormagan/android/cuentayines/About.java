@@ -35,7 +35,7 @@ public class About extends SherlockActivity {
 				try {
 					startActivity(new Intent(Intent.ACTION_VIEW, 
 							Uri.parse("twitter://user?screen_name=" + TWITTER_USER_NAME)));
-				}catch (Exception e) {
+				} catch (Exception e) {
 					startActivity(new Intent(Intent.ACTION_VIEW, 
 							Uri.parse("https://twitter.com/#!/" + TWITTER_USER_NAME)));
 				}				
