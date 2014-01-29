@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/deduct_yin_menu" android:title="@string/deduct_yin_string"></item><item android:id="@+id/reset_yines_menu" android:title="@string/reset_yines_string"></item>
-    <item android:id="@+id/set_yin_price_menu" android:title="@string/set_yin_price_string"></item>
+    
+    <item android:id="@+id/reset_counters" android:title="@string/reset_counters"></item>
+    <item android:id="@+id/delete_all_products" android:title="@string/delete_all_products"></item>
+    
+    <item android:id="@+id/new_product"
+      android:icon="@drawable/ic_action_new_label"
+      android:title="@string/new_product"
+      android:showAsAction="ifRoom" />
+    <item android:id="@+id/about" android:title="@string/about_activity_title"></item>
     
 
 </menu>

@@ -1,95 +1,139 @@
 package es.aitormagan.android.cuentayines;
 
-import es.aitormagan.cuentayines.R;
+import java.util.ArrayList;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+import es.aitormagan.cuentayines.android.R;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.text.InputType;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class CuentaYines extends Activity {
+public class CuentaYines extends SherlockActivity {
 
-	//Preferences
-	private static final String PREFS_NAME = "CuentaYinesPrefs";
-	private static final String YINES_COUNT_PREF = "yinesCount";
-	private static final String YINES_PRICE_PREF = "yinesPrice";
+	//Storage
+	private ProductStorage storage;
 
-	//Intern variables
-	private int yines = 0;
-	private float yinPrice = 0f;
+	//Internal Elements
+	private ArrayList<Product> products = new ArrayList<Product>();
+	private ProductAdapter productAdapter;
 
 	//UI elements
-	private TextView yinesCountView;
-	private TextView priceView;
+	private ListView productsView;
+	private TextView totalView;
+	private TextView addNewCatsView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cuenta_yines);
 
-		// Restore preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		yines = settings.getInt(YINES_COUNT_PREF, 0);
-		yinPrice = settings.getFloat(YINES_PRICE_PREF, 1.2f);
+		//Get products
+		storage = new ProductStorage(this);
+		products = storage.getProducts();
 
-		initializeView();	//Initialize view
+		//Get Views
+		productsView = (ListView) findViewById(R.id.productsView);
+		totalView = (TextView) findViewById(R.id.totalView);
+		addNewCatsView = (TextView) findViewById(R.id.addNewCategoriesView);
 
+		//Associate adapter to the list
+		productAdapter = new ProductAdapter(this, this.products);
+		productsView.setAdapter(productAdapter);
+
+		//Add listener to the list
+		productsView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> a, View v, int position, long id) { 
+				final Product product = (Product) productsView.getItemAtPosition(position);    
+				product.incrementCount();
+				updateView();
+			}
+		});
+
+		productsView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> a, View v, int position, long id) {
+				final Product product = (Product) productsView.getItemAtPosition(position);    
+				AlertDialog.Builder builder = new AlertDialog.Builder(CuentaYines.this);
+				builder.setTitle(R.string.options);
+
+				final CharSequence[] items = { 
+						getString(R.string.decrease_one), 	//0
+						getString(R.string.set_to_zero), 	//1
+						getString(R.string.edit_product), 	//2
+						getString(R.string.remove_product)	//3
+				};
+
+				builder.setTitle(R.string.options)
+				.setItems(items, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						switch(which) {
+						case 0:	//Decrease one
+							product.decreaseCount();
+							break;
+						case 1:	//Set count to zero
+							product.setCountToZero();
+							break;
+						case 2:	//Edit product
+							editOrCreateProduct(product);
+							break;
+						case 3:	//Remove product
+							products.remove(product);
+							break;
+						}
+						updateView();
+
+					}
+				});
+
+				builder.show();
+				return true;
+			}
+		});
+
+		updateView();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.cuenta_yines, menu);
+		getSupportMenuInflater().inflate(R.menu.cuenta_yines, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.deduct_yin_menu:
-			yines = yines > 0 ? yines - 1 : yines;
-			updateYinesView();
+		case R.id.reset_counters:
+			for (Product product: products) {
+				product.setCountToZero();
+			}
+			updateView();
 			break;
-		case R.id.reset_yines_menu:
-			yines = 0;
-			updateYinesView();
+		case R.id.delete_all_products:
+			products.clear();
+			updateView();
 			break;
-		case R.id.set_yin_price_menu:
-			
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			
-			//Add properties (title and view)
-			builder.setTitle(R.string.set_yin_price_string);
-			final EditText input = new EditText(this);
-			input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-			input.setHint(R.string.yin_price_string);
-			builder.setView(input);
-
-			// Add the buttons
-			builder.setPositiveButton(R.string.ok_string, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					yinPrice = Float.parseFloat(input.getText().toString());
-					updateYinesView();
-				}
-			});
-			builder.setNegativeButton(R.string.cancel_string, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
-				}
-			});
-			
-			builder.show();
-
+		case R.id.new_product:
+			editOrCreateProduct(null);
 			break;
+		case R.id.about:
+			Intent intent = new Intent(this, About.class);
+			startActivity(intent);
 		}
 
 		return true;
@@ -97,60 +141,111 @@ public class CuentaYines extends Activity {
 
 	@Override
 	public void onBackPressed() {
-
-		//Safe current yines count
-		safeYines();
-
-		//Execute default action
-		super.onBackPressed();
+		storage.saveProducts(products);	//Save current products
+		super.onBackPressed();			//Default back action
 	}
 
 	@Override
 	protected void onStop() {
+		storage.saveProducts(products);	//Save current products
+		super.onStop();					//Default stop action
+	}
 
-		//Safe current yines count
-		safeYines();
+	private void updateView() {
 
-		//Execute default action
-		super.onStop();
+		float total = 0;
+		for (Product product: products) {
+			total += product.getTotalPrice();
+		}
+
+		if (products.size() == 0) {
+			addNewCatsView.setVisibility(View.VISIBLE);
+			totalView.setVisibility(View.INVISIBLE);
+			productsView.setVisibility(View.INVISIBLE);
+		} else {
+			addNewCatsView.setVisibility(View.INVISIBLE);
+			totalView.setVisibility(View.VISIBLE);
+			productsView.setVisibility(View.VISIBLE);
+		}
+
+		productAdapter.notifyDataSetChanged();
+		totalView.setText(String.format(getString(R.string.total_format), total, "€"));
 
 	}
 
-	private void initializeView() {
+	private void editOrCreateProduct(final Product product) {
 
-		yinesCountView = (TextView) findViewById(R.id.yinesCountView);
-		priceView = (TextView) findViewById(R.id.priceView);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		LayoutInflater inflater = this.getLayoutInflater();
+		final View dialogView = inflater.inflate(R.layout.new_product, null);
+		final EditText productNameView = (EditText) dialogView.findViewById(R.id.new_product_name);
+		final EditText productPriceView = (EditText) dialogView.findViewById(R.id.new_product_price);
+		final EditText productPeopleView = (EditText) dialogView.findViewById(R.id.new_product_people);
 
-		updateYinesView();
+		if (product != null) {
+			productNameView.setText(product.getName());
+			productPriceView.setText(Float.valueOf(product.getPrice()).toString());
+			productPeopleView.setText(Integer.valueOf(product.getPeople()).toString());
+		}
 
-		//Increase count on tap
-		yinesCountView.setOnClickListener(new OnClickListener() {
+		int titleID = (product == null) ? R.string.new_product : R.string.edit_product;
 
+		//Create dialog
+		builder.setTitle(titleID)
+		.setView(dialogView)
+		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				yines++;
-				updateYinesView();
+			public void onClick(DialogInterface dialog, int id) {
+
+				String productName = productNameView.getText().toString().trim();
+				String productPriceStr = productPriceView.getText().toString();
+				String productPeopleStr = productPeopleView.getText().toString();
+
+				if (productName.equals("") ) {
+					Toast.makeText(CuentaYines.this, R.string.error_empty_cat_name, Toast.LENGTH_LONG).show();
+				} else if (productPriceStr.equals("")) {
+					Toast.makeText(CuentaYines.this, R.string.error_empty_price_name, Toast.LENGTH_LONG).show();
+				} else {
+
+					if (productPeopleStr.equals("")) {
+						productPeopleStr = "1";
+					}
+
+					try {
+
+						int productPeople = Integer.valueOf(productPeopleStr);
+						float productPrice = Float.valueOf(productPriceStr);
+
+						if (productPeople <= 0) {
+							Toast.makeText(CuentaYines.this, R.string.error_zero_people, Toast.LENGTH_LONG).show();
+						} else {
+							Product newProd = new Product(productName, productPrice, productPeople);
+
+							if (product == null && !products.contains(newProd)) {
+								products.add(newProd);
+							} else if (product != null && (!products.contains(newProd) || newProd.equals(product))) {
+								product.setName(productName);
+								product.setPrice(productPrice);
+								product.setPeople(productPeople);
+							} else {
+								Toast.makeText(CuentaYines.this, R.string.error_duplicate_product, Toast.LENGTH_LONG).show();
+							}
+
+							//View need to be updated
+							updateView();
+						}
+					} catch (Exception e) {
+						Toast.makeText(CuentaYines.this, R.string.error_unexpected_input, Toast.LENGTH_LONG).show();
+					}
+				}
 			}
-		});
+		})
+		.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.cancel();
+			}
+		});   
+
+		builder.show();
 	}
-
-	private void updateYinesView() {
-		float totalPrice = yinPrice * yines;	//Get yin price
-		
-		//Update view
-		yinesCountView.setText(Integer.valueOf(yines).toString());
-		priceView.setText(String.format(getString(R.string.total_string), totalPrice, "€"));
-	}
-
-	private void safeYines() {
-		//Save preferences
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt(YINES_COUNT_PREF, yines);
-		editor.putFloat(YINES_PRICE_PREF, yinPrice);
-
-		// Commit the edits!
-		editor.commit();
-	}
-
 }

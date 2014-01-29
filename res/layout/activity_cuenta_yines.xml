@@ -9,24 +9,34 @@
     tools:context=".CuentaYines" >
 
     <TextView
-        android:id="@+id/yinesCountView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:id="@+id/totalView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="200sp" />
+        android:gravity="right"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ListView
+        android:id="@+id/productsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/totalView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+    </ListView>
 
     <TextView
-        android:id="@+id/priceView"
+        android:id="@+id/addNewCategoriesView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/totalView"
+        android:layout_alignLeft="@+id/totalView"
+        android:layout_alignRight="@+id/totalView"
+        android:layout_alignTop="@+id/productsView"
         android:gravity="center"
-        android:layout_alignBottom="@+id/yinesCountView"
-        android:layout_alignLeft="@+id/yinesCountView"
-        android:layout_alignParentRight="true" />
+        android:text="@string/add_new_products"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>
