@@ -27,6 +27,7 @@ public class ProductStorage {
 			FileInputStream fis = context.openFileInput(PRODUCTS_FILE);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			products = (ArrayList<Product>) ois.readObject();
+			ois.close();	//Source stream is closed.
 		} catch (Exception e) {
 			//Nothing to do...
 		}
@@ -39,6 +40,7 @@ public class ProductStorage {
 			ObjectOutputStream oos = new ObjectOutputStream(context.
 					openFileOutput(PRODUCTS_FILE, Context.MODE_PRIVATE));
 			oos.writeObject(products);
+			oos.close();	//Source stream is closed
 		} catch (Exception e) {
 			Toast.makeText(context, R.string.error_empty_price_name, Toast.LENGTH_LONG).show();
 		}

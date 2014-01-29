@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,60 +43,6 @@ public class CuentaYines extends SherlockActivity {
 		//Get products
 		storage = new ProductStorage(this);
 		products = storage.getProducts();
-
-		initializeView();	//Initialize view
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		initializeView();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.cuenta_yines, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.reset_counters:
-			for (Product product: products) {
-				product.setCountToZero();
-			}
-			updateView();
-			break;
-		case R.id.delete_all_products:
-			products.clear();
-			updateView();
-			break;
-		case R.id.new_product:
-			editOrCreateProduct(null);
-			break;
-		case R.id.about:
-			Intent intent = new Intent(this, About.class);
-			startActivity(intent);
-		}
-
-		return true;
-	}
-
-	@Override
-	public void onBackPressed() {
-		storage.saveProducts(products);	//Save current products
-		super.onBackPressed();			//Default back action
-	}
-
-	@Override
-	protected void onStop() {
-		storage.saveProducts(products);	//Save current products
-		super.onStop();					//Default stop action
-	}
-
-	private void initializeView() {
 
 		//Get Views
 		productsView = (ListView) findViewById(R.id.productsView);
@@ -160,6 +105,72 @@ public class CuentaYines extends SherlockActivity {
 		});
 
 		updateView();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.cuenta_yines, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.reset_counters:
+			for (Product product: products) {
+				product.setCountToZero();
+			}
+			updateView();
+			break;
+		case R.id.delete_all_products:
+			products.clear();
+			updateView();
+			break;
+		case R.id.new_product:
+			editOrCreateProduct(null);
+			break;
+		case R.id.about:
+			Intent intent = new Intent(this, About.class);
+			startActivity(intent);
+		}
+
+		return true;
+	}
+
+	@Override
+	public void onBackPressed() {
+		storage.saveProducts(products);	//Save current products
+		super.onBackPressed();			//Default back action
+	}
+
+	@Override
+	protected void onStop() {
+		storage.saveProducts(products);	//Save current products
+		super.onStop();					//Default stop action
+	}
+
+	private void updateView() {
+
+		float total = 0;
+		for (Product product: products) {
+			total += product.getTotalPrice();
+		}
+
+		if (products.size() == 0) {
+			addNewCatsView.setVisibility(View.VISIBLE);
+			totalView.setVisibility(View.INVISIBLE);
+			productsView.setVisibility(View.INVISIBLE);
+		} else {
+			addNewCatsView.setVisibility(View.INVISIBLE);
+			totalView.setVisibility(View.VISIBLE);
+			productsView.setVisibility(View.VISIBLE);
+		}
+
+		productAdapter.notifyDataSetChanged();
+		totalView.setText(String.format(getString(R.string.total_format), total, "€"));
+
 	}
 
 	private void editOrCreateProduct(final Product product) {
@@ -236,27 +247,5 @@ public class CuentaYines extends SherlockActivity {
 		});   
 
 		builder.show();
-	}
-
-	private void updateView() {
-
-		float total = 0;
-		for (Product product: products) {
-			total += product.getTotalPrice();
-		}
-
-		if (products.size() == 0) {
-			addNewCatsView.setVisibility(View.VISIBLE);
-			totalView.setVisibility(View.INVISIBLE);
-			productsView.setVisibility(View.INVISIBLE);
-		} else {
-			addNewCatsView.setVisibility(View.INVISIBLE);
-			totalView.setVisibility(View.VISIBLE);
-			productsView.setVisibility(View.VISIBLE);
-		}
-
-		productAdapter.notifyDataSetChanged();
-		totalView.setText(String.format(getString(R.string.total_format), total, "€"));
-
 	}
 }

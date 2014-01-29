@@ -13,20 +13,28 @@ import android.widget.TextView;
 
 public class ProductAdapter extends BaseAdapter{
 
-	//Atributos
+	private class MainListHolder {
+		private TextView countView;
+		private TextView nameView;
+		private TextView pricePerUnitView;
+		private TextView peopleView;
+		private TextView totalPriceView;
+	}
+
+	//Attributes
 	private ArrayList<Product> list;
-	private Context mContext;
+	private Context context;
 	private LayoutInflater inflator;
 
 	/**
-	 * Crear el adaptador de la lista
-	 * @param context El contexto de la canción
-	 * @param list La lista de canciones
+	 * 
+	 * @param context Activity context
+	 * @param list Product list
 	 */
 	public ProductAdapter(Context context, ArrayList<Product> list){
-		this.mContext = context;
-		this.inflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.context = context;
 		this.list = list;
+		this.inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	public int getCount() {
@@ -43,48 +51,40 @@ public class ProductAdapter extends BaseAdapter{
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		//Attributes
-		View v = convertView;
-		final MainListHolder mHolder;
+		View view = convertView;
+		final MainListHolder listHolder;
 		final Product product = list.get(position);
 
-		if (convertView == null){
-			mHolder = new MainListHolder();
-			v = inflator.inflate(R.layout.product, null);
-			mHolder.countView = (TextView) v.findViewById(R.id.productCountView);
-			mHolder.nameView = (TextView) v.findViewById(R.id.productNameView);
-			mHolder.pricePerUnitView = (TextView) v.findViewById(R.id.productPricePerUnitView);
-			mHolder.peopleView = (TextView) v.findViewById(R.id.productPeopleView);
-			mHolder.totalPriceView = (TextView) v.findViewById(R.id.productTotalPriceView);
-			v.setTag(mHolder);
+		//Get view
+		if (view == null){
+			listHolder = new MainListHolder();
+			view = inflator.inflate(R.layout.product, null);
+			listHolder.countView = (TextView) view.findViewById(R.id.productCountView);
+			listHolder.nameView = (TextView) view.findViewById(R.id.productNameView);
+			listHolder.pricePerUnitView = (TextView) view.findViewById(R.id.productPricePerUnitView);
+			listHolder.peopleView = (TextView) view.findViewById(R.id.productPeopleView);
+			listHolder.totalPriceView = (TextView) view.findViewById(R.id.productTotalPriceView);
+			view.setTag(listHolder);
 		} else {
-			mHolder = (MainListHolder) v.getTag();
+			listHolder = (MainListHolder) view.getTag();
 		}
 
-
-		mHolder.countView.setText(Integer.valueOf(product.getCount()).toString());
-		mHolder.nameView.setText(product.getName());
-		mHolder.pricePerUnitView.setText(String.format(mContext.getString(R.string.product_price_per_unit_format), 
+		//Set content on the element
+		listHolder.countView.setText(Integer.valueOf(product.getCount()).toString());
+		listHolder.nameView.setText(product.getName());
+		listHolder.pricePerUnitView.setText(String.format(context.getString(R.string.product_price_per_unit_format), 
 				product.getPrice(), "€"));
-		mHolder.peopleView.setText(String.format(mContext.getString(R.string.product_people_format), 
+		listHolder.peopleView.setText(String.format(context.getString(R.string.product_people_format), 
 				product.getPeople()));
-		mHolder.totalPriceView.setText(String.format(mContext.getString(R.string.product_total_price_format), 
+		listHolder.totalPriceView.setText(String.format(context.getString(R.string.product_total_price_format), 
 				product.getTotalPrice(), "€"));
 
 		if (product.getPeople() == 1) {
-			mHolder.peopleView.setVisibility(View.INVISIBLE);
+			listHolder.peopleView.setVisibility(View.INVISIBLE);
 		} else {
-			mHolder.peopleView.setVisibility(View.VISIBLE);
+			listHolder.peopleView.setVisibility(View.VISIBLE);
 		}
 
-		return v;
+		return view;
 	}
-
-	private class MainListHolder {
-		private TextView countView;
-		private TextView nameView;
-		private TextView pricePerUnitView;
-		private TextView peopleView;
-		private TextView totalPriceView;
-	}
-
 }
