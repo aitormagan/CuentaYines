@@ -42,7 +42,7 @@ public class ProductStorage {
 			oos.writeObject(products);
 			oos.close();	//Source stream is closed
 		} catch (Exception e) {
-			Toast.makeText(context, R.string.error_empty_price_name, Toast.LENGTH_LONG).show();
+			Toast.makeText(context, R.string.error_write_file, Toast.LENGTH_LONG).show();
 		}
 	}
 }
